@@ -8,14 +8,21 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+  "github.com/AposLaz/kube-netlag/config"
 )
 
-func ComputeLatency(ip string) ([]float64,error) {
+// ComputeLatency measures the network latency for a given IP and port using the netperf tool.
+// It returns a slice containing the minimum, maximum, and mean latency values in milliseconds.
+// The function runs the netperf command with a TCP_RR test and processes the output to extract
+// the latency metrics. The operation is subject to a timeout to prevent hanging. In case of
+// errors during command execution or output parsing, an error is returned.
+func ComputeLatency(ip string, port string) ([]float64,error) {
     // Set a timeout context
     ctx, cancel := context.WithTimeout(context.Background(), 30* time.Second)
     defer cancel()  // releases resources if slowOperation completes before timeout elapses
 
-    netperfCmd := exec.CommandContext(ctx, "netperf", "-H", ip, "-t", "TCP_RR", "--", "-o", "min_latency,max_latency,mean_latency")
+    netperfCmd := exec.CommandContext(ctx, "netperf", "-H", ip, "-p", port, "-t", "TCP_RR", "--", "-o", "min_latency,max_latency,mean_latency")
     awkCmd := exec.Command("awk", "-F,", "/^[0-9]/ {print $1, $2, $3}")
     
     netperfOut, err := netperfCmd.StdoutPipe()
@@ -72,4 +79,25 @@ func ComputeLatency(ip string) ([]float64,error) {
     }
     
 	return nodeLatencies, nil
+}
+
+func StartServer(port string) error {
+  cmd := exec.Command("netserver", "-p", port)
+  maxRetries := 5
+  var err error
+
+  for attempt := 1; attempt <= maxRetries; attempt++ {
+      err := cmd.Start(); 
+  
+      if err == nil {
+        config.Logger("INFO", "Netperf server started on port %s", port)
+        return nil
+      }
+
+      config.Logger("ERROR", "Failed to start netserver (Attempt %d/%d): %v", attempt, maxRetries, err)
+
+      time.Sleep(2 * time.Second)
+  }
+
+  return err
 }

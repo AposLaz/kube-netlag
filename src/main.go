@@ -8,7 +8,12 @@ import (
 )
 
 func main() {
-    
+    envVars := config.Env()
+
+    if err := app.StartServer(envVars.NetperfPort); err != nil {
+        panic(err)
+        return
+    }
     // TODO fetch the ips address from the Nodes
     ips := []string{"0.0.0.0","127.0.0.1", "244.178.44.111"}
 
@@ -16,7 +21,7 @@ func main() {
     done := make(chan bool)
 
     for _, ip := range ips {
-        go app.Monitoring(ip, done)
+        go app.Monitoring(ip,envVars.NetperfPort, done)
     }
 
     time.Sleep(120 * time.Second)
