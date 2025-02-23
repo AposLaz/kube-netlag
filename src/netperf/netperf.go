@@ -81,6 +81,9 @@ func ComputeLatency(ip string, port string) ([]float64,error) {
 	return nodeLatencies, nil
 }
 
+// StartServer launches the netperf server on the specified port. It attempts to start the server
+// up to a maximum number of retries if initial attempts fail. The function logs the success or
+// failure of starting the server and returns an error if all attempts are unsuccessful.
 func StartServer(port string) error {
   cmd := exec.Command("netserver", "-p", port)
   maxRetries := 5

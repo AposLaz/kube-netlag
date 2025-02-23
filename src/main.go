@@ -3,25 +3,27 @@ package main
 import (
 	"time"
 
-	"github.com/AposLaz/kube-netlag/app"
 	"github.com/AposLaz/kube-netlag/config"
 )
 
 func main() {
     envVars := config.Env()
 
-    if err := app.StartServer(envVars.NetperfPort); err != nil {
+    if err := StartServer(envVars.NetperfPort); err != nil {
         panic(err)
-        return
     }
-    // TODO fetch the ips address from the Nodes
-    ips := []string{"0.0.0.0","127.0.0.1", "244.178.44.111"}
+
+    nodes := GetTargetNodesIP()
+
+    if len(nodes) == 0 {
+        panic("No target nodes found.")
+    }
 
     // declares a timer that will run every 5 seconds
     done := make(chan bool)
 
-    for _, ip := range ips {
-        go app.Monitoring(ip,envVars.NetperfPort, done)
+    for _, node := range nodes {
+        go Monitoring(node,envVars.NetperfPort, done)
     }
 
     time.Sleep(120 * time.Second)
