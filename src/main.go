@@ -1,13 +1,17 @@
 package main
 
 import (
-	"time"
-
 	"github.com/AposLaz/kube-netlag/config"
+	"github.com/AposLaz/kube-netlag/promMetrics"
 )
 
 func main() {
 	envVars := config.Env()
+
+	// intialize prometheus metrics
+	promMetrics.Init()
+	// Initialize prometheus server
+	promMetrics.StartServer(envVars.MetricsPort)
 
 	if err := StartServer(envVars.NetperfPort); err != nil {
 		panic(err)
@@ -26,9 +30,5 @@ func main() {
 		go Monitoring(node, envVars.NetperfPort, envVars.CurrentNodeIp, done)
 	}
 
-	time.Sleep(120 * time.Second)
-
-	// stop all go routines
-	close(done)
-	config.Logger("INFO", "All monitoring stopped.")
+	select {}
 }

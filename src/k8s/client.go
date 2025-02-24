@@ -1,14 +1,22 @@
 package k8s
 
 import (
-	"os"
 	"fmt"
-	
+	"os"
+
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
+// GetClient creates a Kubernetes client by loading the kubeconfig from one of the following sources,
+// in order of preference:
+//
+// 1. In-cluster configuration, if running inside a Kubernetes pod.
+// 2. The file specified by the KUBECONFIG environment variable.
+// 3. The default location, $HOME/.kube/config.
+//
+// The function returns an error if it fails to create a client.
 func GetClient() (*kubernetes.Clientset, error) {
 	config, err := rest.InClusterConfig()
 	if err != nil {

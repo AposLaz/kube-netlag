@@ -14,6 +14,9 @@ type NodeInfo struct {
 	CurrentNodeName string
 }
 
+// GetClusterNodes fetches all nodes in the cluster, filters out the current node by IP and returns a slice of NodeInfo
+// containing the name and internal IP of the target nodes. The function returns an error if the Kubernetes client fails to
+// list the nodes.
 func GetClusterNodes(clientset *kubernetes.Clientset, currentNodeIP string) ([]NodeInfo, error) {
 	nodes, err := clientset.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {

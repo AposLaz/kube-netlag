@@ -22,13 +22,29 @@ spec:
           imagePullPolicy: Always
           env:
             - name: NETPERF_PORT
-              value: "12865" # Port passed to Go app
+              value: "12865" # Port for netperf
+            - name: METRICS_PORT
+              value: "9090" # Port for Prometheus metrics
             - name: HOST_IP
               valueFrom:
                 fieldRef:
-                  fieldPath: status.hostIP # Passes Node Internal IP to app
+                  fieldPath: status.hostIP # Node's internal IP
           ports:
             - containerPort: 12865
-              hostPort: 12865 # Bind directly to Node IP via hostNetwork
+              hostPort: 12865 # Netperf port bound to host
+            - containerPort: 9090
+              hostPort: 9090 # Prometheus metrics port
           securityContext:
             privileged: true # Required if Netperf needs privileged access
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 9090
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 5

@@ -8,6 +8,7 @@ import (
 	"github.com/AposLaz/kube-netlag/config"
 	"github.com/AposLaz/kube-netlag/k8s"
 	"github.com/AposLaz/kube-netlag/netperf"
+	"github.com/AposLaz/kube-netlag/promMetrics"
 )
 
 // GetTargetNodesIP returns a list of NodeInfo objects that represent the target nodes in the cluster
@@ -67,6 +68,10 @@ func Monitoring(node k8s.NodeInfo, port string, currentNodeIp string, done <-cha
 			if err != nil {
 				config.Logger("ERROR", "Failed to compute latency for Node: %s with IP: %s\nError: %v", node.Name, node.InternalIP, err.Error())
 
+				// Sleep before retrying
+				config.Logger("INFO", "Sleeping for 1 minute before retrying monitoring for Node: %s", node.Name)
+				time.Sleep(1 * time.Minute)
+
 				// Attempt to re-fetch node IPs
 				config.Logger("INFO", "Attempting to refresh node IPs...")
 				newNodes := GetTargetNodesIP(currentNodeIp)
@@ -88,6 +93,9 @@ func Monitoring(node k8s.NodeInfo, port string, currentNodeIp string, done <-cha
 
 			config.Logger("INFO", "Latency Results | from_node=%s current_ip=%s to_node=%s target_ip=%s min_latency_ms=%.2f max_latency_ms=%.2f mean_latency_ms=%.2f",
 				node.CurrentNodeName, currentNodeIp, node.Name, node.InternalIP, latency[0], latency[1], latency[2])
+
+			metrics := promMetrics.LatencyMeasurement{node.CurrentNodeName, currentNodeIp, node.Name, node.InternalIP, latency[0], latency[1], latency[2]}
+			promMetrics.UpdateMetrics(metrics)
 		}
 	}
 }
