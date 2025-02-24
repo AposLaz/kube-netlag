@@ -1,0 +1,37 @@
+name: Build and push Docker image
+description: "Build docker image, push to Dockerhub"
+inputs:
+  docker-username:
+    description: "Docker username"
+    required: true
+  docker-password:
+    description: "Docker password"
+    required: true
+  docker-repository:
+    description: "The Docker repository to push the image to"
+    required: true
+  version-label:
+    description: "Version of repository"
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Login to Docker Hub
+      id: login-dockerhub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ inputs.docker-username }}
+        password: ${{ inputs.docker-password }}
+
+    - name: Build, tag, and push image to Dockerhub
+      shell: bash
+      id: build-image
+      run: |
+        docker build \
+        -t ${{ inputs.docker-username }}/${{ inputs.docker-repository }}:latest \
+        -t ${{ inputs.docker-username }}/${{ inputs.docker-repository }}:${{ inputs.version-label || github.sha }} \
+        -f ./.docker/Dockerfile --no-cache
+        docker push --all-tags ${{ inputs.docker-username }}/${{ inputs.docker-repository }}
+        echo "image=${{ inputs.docker-username }}/${{ inputs.docker-repository }}" >> $GITHUB_OUTPUT

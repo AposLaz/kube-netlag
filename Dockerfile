@@ -1,4 +1,3 @@
-# ---- Builder Stage (Go) ----
 FROM golang:1.24 AS builder
 
 # Install git
@@ -25,11 +24,7 @@ FROM ubuntu:24.10
 
 # Install dependencies for netperf and bind-tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    linux-headers-generic \
-    bind9-dnsutils \
-    ca-certificates \
-    netperf \
+    ca-certificates netperf \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kube-netlag-daemon
+  namespace: fortesie
+spec:
+  selector:
+    matchLabels:
+      app: kube-netlag
+  template:
+    metadata:
+      labels:
+        app: kube-netlag
+    spec:
+      hostNetwork: true # Share the host's network namespace
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: kube-netlag
+          image: alazidis/kube-netlag:latest # Your built image
+          imagePullPolicy: Always
+          env:
+            - name: NETPERF_PORT
+              value: "12865" # Port passed to Go app
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP # Passes Node Internal IP to app
+          ports:
+            - containerPort: 12865
+              hostPort: 12865 # Bind directly to Node IP via hostNetwork
+          securityContext:
+            privileged: true # Required if Netperf needs privileged access
