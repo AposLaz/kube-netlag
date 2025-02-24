@@ -13,10 +13,13 @@ const (
 	Cyan   = "\033[36m"
 )
 
+// Logger prints a log message with the given level and message to the console, along with the current timestamp.
+// The message is formatted according to the fmt.Printf syntax, and the level is used to determine the color of the text.
+// Allowed log levels are "INFO", "WARN", "ERROR", and "DEBUG", and the corresponding colors are green, yellow, red, and cyan, respectively.
 func Logger(level, message string, args ...interface{}) {
 	timestamp := time.Now().Format("2006-01-02T15:04:05")
 
-		// Apply color based on log level
+	// Apply color based on log level
 	var color string
 	switch level {
 	case "INFO":

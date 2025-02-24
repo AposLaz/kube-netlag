@@ -8,6 +8,11 @@ type Config struct {
 	MetricsPort   string
 }
 
+// Env returns a Config object with environment variable values. If a variable is
+// unset, it will use the following default values:
+// - NETPERF_PORT: 12865
+// - METRICS_PORT: 9090
+// - HOST_IP: "" (must be set)
 func Env() Config {
 	netperfPort := os.Getenv("NETPERF_PORT")
 	if netperfPort == "" {

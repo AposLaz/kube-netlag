@@ -45,12 +45,16 @@ var (
 	)
 )
 
+// Init registers the Prometheus gauges for latency metrics with the default
+// registry. It should be called once at application startup to enable
+// Prometheus metrics collection.
 func Init() {
 	prometheus.MustRegister(minLatencyGauge)
 	prometheus.MustRegister(maxLatencyGauge)
 	prometheus.MustRegister(avgLatencyGauge)
 }
 
+// UpdateMetrics updates the Prometheus gauges with the given latency metrics.
 func UpdateMetrics(metrics LatencyMeasurement) {
 	labels := prometheus.Labels{
 		"from_node": metrics.FromNodeName,
@@ -63,6 +67,10 @@ func UpdateMetrics(metrics LatencyMeasurement) {
 	maxLatencyGauge.With(labels).Set(metrics.MaxLatency)
 	avgLatencyGauge.With(labels).Set(metrics.AvgLatency)
 }
+
+// StartServer initializes an HTTP server on the specified port to expose Prometheus metrics.
+// It registers the "/metrics" endpoint and starts listening for incoming requests.
+// If the server fails to start, it logs an error message and panics.
 func StartServer(port string) {
 	http.Handle("/metrics", promhttp.Handler())
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
