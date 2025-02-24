@@ -18,7 +18,7 @@ spec:
       serviceAccountName: kube-netlag-sa
       containers:
         - name: kube-netlag
-          image: alazidis/kube-netlag:latest # Your built image
+          image: alazidis/kube-netlag:0.0.1 # Your built image
           imagePullPolicy: Always
           env:
             - name: NETPERF_PORT

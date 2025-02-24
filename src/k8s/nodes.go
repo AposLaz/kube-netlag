@@ -28,11 +28,11 @@ func GetClusterNodes(clientset *kubernetes.Clientset, currentNodeIP string) ([]N
 		for _, addr := range node.Status.Addresses {
 			if addr.Type == "InternalIP" {
 				internalIP = addr.Address
-				currentNodeName = node.Name
 			}
 		}
 
 		if internalIP == currentNodeIP {
+			currentNodeName = node.Name
 			continue
 		}
 
