@@ -11,7 +11,7 @@ func main() {
 	// intialize prometheus metrics
 	promMetrics.Init()
 	// Initialize prometheus server
-	promMetrics.StartServer(envVars.MetricsPort)
+	go promMetrics.StartServer(envVars.MetricsPort)
 
 	if err := StartServer(envVars.NetperfPort); err != nil {
 		panic(err)

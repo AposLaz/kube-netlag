@@ -94,7 +94,7 @@ func Monitoring(node k8s.NodeInfo, port string, currentNodeIp string, done <-cha
 			config.Logger("INFO", "Latency Results | from_node=%s current_ip=%s to_node=%s target_ip=%s min_latency_ms=%.2f max_latency_ms=%.2f mean_latency_ms=%.2f",
 				node.CurrentNodeName, currentNodeIp, node.Name, node.InternalIP, latency[0], latency[1], latency[2])
 
-			metrics := promMetrics.LatencyMeasurement{node.CurrentNodeName, currentNodeIp, node.Name, node.InternalIP, latency[0], latency[1], latency[2]}
+			metrics := promMetrics.LatencyMeasurement{FromNodeName: node.CurrentNodeName, FromIpAddress: currentNodeIp, ToNodeName: node.Name, ToIpAddress: node.InternalIP, MinLatency: latency[0], MaxLatency: latency[1], AvgLatency: latency[2]}
 			promMetrics.UpdateMetrics(metrics)
 		}
 	}
