@@ -26,7 +26,7 @@ runs:
         password: ${{ inputs.docker-password }}
 
     - name: Build, tag, and push image to Dockerhub
-      shell: sh
+      shell: powershell
       id: build-image
       run: |
         docker build \
