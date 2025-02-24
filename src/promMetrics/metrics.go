@@ -77,4 +77,5 @@ func StartServer(port string) {
 		config.Logger("ERROR", "Failed to start prometheus server: %v", err)
 		panic(err)
 	}
+	config.Logger("INFO", "Prometheus server started on port %s", port)
 }
