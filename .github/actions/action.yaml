@@ -32,6 +32,6 @@ runs:
         docker build \
         -t ${{ inputs.docker-username }}/${{ inputs.docker-repository }}:latest \
         -t ${{ inputs.docker-username }}/${{ inputs.docker-repository }}:${{ inputs.version-label || github.sha }} \
-        -f ./.docker/Dockerfile --no-cache
+        . --no-cache
         docker push --all-tags ${{ inputs.docker-username }}/${{ inputs.docker-repository }}
         echo "image=${{ inputs.docker-username }}/${{ inputs.docker-repository }}" >> $GITHUB_OUTPUT
