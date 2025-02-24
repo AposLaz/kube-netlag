@@ -15,6 +15,7 @@ spec:
       hostNetwork: true # Share the host's network namespace
       imagePullSecrets:
         - name: regcred
+      serviceAccountName: kube-netlag-sa
       containers:
         - name: kube-netlag
           image: alazidis/kube-netlag:latest # Your built image

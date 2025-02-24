@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y git
 WORKDIR /app
 
 # Copy go.mod and go.sum for dependency caching
-COPY src/go.mod ./
+COPY src/go.mod src/go.sum ./
 
 # Download Go module dependencies
 RUN go mod download

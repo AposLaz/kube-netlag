@@ -9,8 +9,9 @@ import (
 )
 
 type NodeInfo struct {
-	Name       string
-	InternalIP string
+	Name            string
+	InternalIP      string
+	CurrentNodeName string
 }
 
 func GetClusterNodes(clientset *kubernetes.Clientset, currentNodeIP string) ([]NodeInfo, error) {
@@ -22,10 +23,12 @@ func GetClusterNodes(clientset *kubernetes.Clientset, currentNodeIP string) ([]N
 	var nodesInfo []NodeInfo
 	for _, node := range nodes.Items {
 		var internalIP string
+		var currentNodeName string
 
 		for _, addr := range node.Status.Addresses {
 			if addr.Type == "InternalIP" {
 				internalIP = addr.Address
+				currentNodeName = node.Name
 			}
 		}
 
@@ -34,8 +37,9 @@ func GetClusterNodes(clientset *kubernetes.Clientset, currentNodeIP string) ([]N
 		}
 
 		nodesInfo = append(nodesInfo, NodeInfo{
-			Name:       node.Name,
-			InternalIP: internalIP,
+			Name:            node.Name,
+			InternalIP:      internalIP,
+			CurrentNodeName: currentNodeName,
 		})
 	}
 

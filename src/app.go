@@ -40,7 +40,7 @@ var activeNodes sync.Map
 func Monitoring(node k8s.NodeInfo, port string, currentNodeIp string, done <-chan bool) {
 	// Check if the node is already being monitored
 	if _, loaded := activeNodes.LoadOrStore(node.InternalIP, true); loaded {
-		config.Logger("INFO", "Node %s is already being monitored. Skipping.", node.InternalIP)
+		config.Logger("WARN", "Node %s is already being monitored. Skipping.", node.InternalIP)
 		return
 	}
 
@@ -86,8 +86,8 @@ func Monitoring(node k8s.NodeInfo, port string, currentNodeIp string, done <-cha
 				return
 			}
 
-			config.Logger("INFO", "Latency Results | Node: %s | IP: %s | Min: %.2f ms | Max: %.2f ms | Mean: %.2f ms",
-				node.Name, node.InternalIP, latency[0], latency[1], latency[2])
+			config.Logger("INFO", "Latency Results | from_node=%s current_ip=%s to_node=%s target_ip=%s min_latency_ms=%.2f max_latency_ms=%.2f mean_latency_ms=%.2f",
+				node.CurrentNodeName, currentNodeIp, node.Name, node.InternalIP, latency[0], latency[1], latency[2])
 		}
 	}
 }
