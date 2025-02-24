@@ -7,28 +7,28 @@ import (
 )
 
 func main() {
-    envVars := config.Env()
+	envVars := config.Env()
 
-    if err := StartServer(envVars.NetperfPort); err != nil {
-        panic(err)
-    }
+	if err := StartServer(envVars.NetperfPort); err != nil {
+		panic(err)
+	}
 
-    nodes := GetTargetNodesIP()
+	nodes := GetTargetNodesIP(envVars.CurrentNodeIp)
 
-    if len(nodes) == 0 {
-        panic("No target nodes found.")
-    }
+	if len(nodes) == 0 {
+		panic("No target nodes found.")
+	}
 
-    // declares a timer that will run every 5 seconds
-    done := make(chan bool)
+	// declares a timer that will run every 5 seconds
+	done := make(chan bool)
 
-    for _, node := range nodes {
-        go Monitoring(node,envVars.NetperfPort, done)
-    }
+	for _, node := range nodes {
+		go Monitoring(node, envVars.NetperfPort, envVars.CurrentNodeIp, done)
+	}
 
-    time.Sleep(120 * time.Second)
-    
-    // stop all go routines
-    close(done)
-    config.Logger("INFO", "All monitoring stopped.")
+	time.Sleep(120 * time.Second)
+
+	// stop all go routines
+	close(done)
+	config.Logger("INFO", "All monitoring stopped.")
 }

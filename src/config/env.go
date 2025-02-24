@@ -3,7 +3,8 @@ package config
 import "os"
 
 type Config struct {
-	NetperfPort string
+	NetperfPort   string
+	CurrentNodeIp string
 }
 
 func Env() Config {
@@ -13,7 +14,7 @@ func Env() Config {
 	}
 
 	return Config{
-		NetperfPort: netperfPort,
+		NetperfPort:   netperfPort,
+		CurrentNodeIp: os.Getenv("HOST_IP"),
 	}
 }
-
