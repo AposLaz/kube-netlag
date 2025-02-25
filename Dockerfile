@@ -1,7 +1,7 @@
 FROM golang:1.24 AS builder
 
 RUN apt-get update && apt-get install -y git && \
-    useradd -m -s /bin/bash appuser
+    useradd -m -s /bin/bash gouser
 
 # Set working directory
 WORKDIR /app
@@ -23,7 +23,7 @@ FROM ubuntu:24.10
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates netperf \
     && rm -rf /var/lib/apt/lists/* && \
-    useradd -m -s /bin/bash appuser
+    useradd -m -s /bin/bash gouser
 
 WORKDIR /app
 
