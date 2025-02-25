@@ -2,7 +2,7 @@ package config
 
 import "os"
 
-type Config struct {
+type EnvVars struct {
 	NetperfPort   string
 	CurrentNodeIp string
 	MetricsPort   string
@@ -13,7 +13,7 @@ type Config struct {
 // - NETPERF_PORT: 12865
 // - METRICS_PORT: 9090
 // - HOST_IP: "" (must be set)
-func Env() Config {
+func Env() EnvVars {
 	netperfPort := os.Getenv("NETPERF_PORT")
 	if netperfPort == "" {
 		netperfPort = "12865"
@@ -24,7 +24,7 @@ func Env() Config {
 		metricsPort = "9090"
 	}
 
-	return Config{
+	return EnvVars{
 		NetperfPort:   netperfPort,
 		CurrentNodeIp: os.Getenv("HOST_IP"),
 		MetricsPort:   metricsPort,

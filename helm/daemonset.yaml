@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: kube-netlag-daemon
-  namespace: fortesie
+  namespace: kube-netlag
 spec:
   selector:
     matchLabels:

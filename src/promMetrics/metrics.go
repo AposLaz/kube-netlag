@@ -23,7 +23,7 @@ var (
 	minLatencyGauge = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "node_min_latency_ms",
-			Help: "Minimum latency in milliseconds between nodes.",
+			Help: "Minimum latency in microseconds between nodes.",
 		},
 		[]string{"from_node", "to_node", "from_ip", "to_ip"},
 	)
@@ -31,7 +31,7 @@ var (
 	maxLatencyGauge = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "node_max_latency_ms",
-			Help: "Maximum latency in milliseconds between nodes.",
+			Help: "Maximum latency in microseconds between nodes.",
 		},
 		[]string{"from_node", "to_node", "from_ip", "to_ip"},
 	)
@@ -39,7 +39,7 @@ var (
 	avgLatencyGauge = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "node_avg_latency_ms",
-			Help: "Average latency in milliseconds between nodes.",
+			Help: "Average latency in microseconds between nodes.",
 		},
 		[]string{"from_node", "to_node", "from_ip", "to_ip"},
 	)
