@@ -19,6 +19,9 @@ type CurrentNodeInfo struct {
 	InternalIP string
 }
 
+var activeNodes sync.Map
+var failureCounts sync.Map
+
 // GetTargetNodesIP returns a list of NodeInfo objects that represent the target nodes in the cluster
 // for latency measurement. It will panic if it fails to create a Kubernetes client or fetch the
 // cluster nodes.
@@ -37,8 +40,6 @@ func GetTargetNodesIP(currentNodeIp string) (string, []k8s.NodeInfo) {
 
 	return currentNode, nodes
 }
-
-var activeNodes sync.Map
 
 // MonitoringLatency initiates a latency monitoring process for a given node.
 // It periodically computes the latency from the current node to the target node
@@ -172,6 +173,22 @@ func handleNodeRefresh(envVars config.EnvVars, failureChan chan<- string) {
 // using the provided netperf port and current node information.
 func handleNodeFailure(envVars config.EnvVars, failedIP string, failureChan chan<- string) {
 	config.Logger("INFO", "Restarting monitoring for Node with IP: %s", failedIP)
+
+	// Implement backoff logic
+	failCountRaw, _ := failureCounts.LoadOrStore(failedIP, 0)
+	failCount := failCountRaw.(int)
+	failCount++
+	failureCounts.Store(failedIP, failCount)
+
+	// Exponential backoff with a cap
+	backoffDuration := time.Duration(5*failCount) * time.Second
+	if backoffDuration > 60*time.Second {
+		backoffDuration = 60 * time.Second
+	}
+
+	config.Logger("INFO", "Applying backoff of %v before restarting monitoring for Node: %s", backoffDuration, failedIP)
+	time.Sleep(backoffDuration)
+
 	currentNode, newNodes := GetTargetNodesIP(envVars.CurrentNodeIp)
 
 	currentNodeInfo := CurrentNodeInfo{Name: currentNode, InternalIP: envVars.CurrentNodeIp}
