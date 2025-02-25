@@ -3,6 +3,7 @@ package k8s
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -32,6 +33,10 @@ func GetClusterNodes(clientset *kubernetes.Clientset, currentNodeIP string) (str
 			if addr.Type == "InternalIP" {
 				internalIP = addr.Address
 			}
+		}
+
+		if strings.Contains(node.Name, "master") || strings.Contains(node.Name, "control-plane") {
+			continue
 		}
 
 		if internalIP == currentNodeIP {
