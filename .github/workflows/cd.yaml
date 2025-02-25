@@ -15,4 +15,4 @@ jobs:
                   docker-username: ${{ secrets.DOCKER_USERNAME }}
                   docker-password: ${{ secrets.DOCKER_PASSWORD }}
                   docker-repository: "kube-netlag"
-                  version-label: 0.0.1
+                  version-label: 0.0.2
