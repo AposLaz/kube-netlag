@@ -66,31 +66,28 @@ func MonitoringLatency(node k8s.NodeInfo, port string, currentNode CurrentNodeIn
 
 	config.Logger("INFO", "Started monitoring Node: %s with IP: %s", node.Name, node.InternalIP)
 
-	ticker := time.NewTicker(15 * time.Second)
 	defer func() {
-		ticker.Stop()
 		activeNodes.Delete(node.InternalIP)
 		config.Logger("INFO", "Stopped monitoring Node: %s with IP: %s", node.Name, node.InternalIP)
 	}()
 
 	for {
-		select {
-		case <-ticker.C:
-			config.Logger("INFO", "Monitoring Node: %s", node.Name)
+		config.Logger("INFO", "Monitoring Node: %s", node.Name)
 
-			latency, err := netperf.ComputeLatency(node.InternalIP, port)
-			if err != nil {
-				config.Logger("ERROR", "Failed to compute latency for Node: %s with IP: %s\nError: %v", node.Name, node.InternalIP, err.Error())
-				failureChan <- node.InternalIP // Report failure to main
-				return
-			}
-
-			config.Logger("INFO", "Latency Results | from_node=%s current_ip=%s to_node=%s target_ip=%s min_latency_ms=%.2f max_latency_ms=%.2f mean_latency_ms=%.2f",
-				currentNode.Name, currentNode.InternalIP, node.Name, node.InternalIP, latency[0], latency[1], latency[2])
-
-			metrics := promMetrics.LatencyMeasurement{FromNodeName: currentNode.Name, FromIpAddress: currentNode.InternalIP, ToNodeName: node.Name, ToIpAddress: node.InternalIP, MinLatency: latency[0], MaxLatency: latency[1], AvgLatency: latency[2]}
-			promMetrics.UpdateMetrics(metrics)
+		latency, err := netperf.ComputeLatency(node.InternalIP, port)
+		if err != nil {
+			config.Logger("ERROR", "Failed to compute latency for Node: %s with IP: %s\nError: %v", node.Name, node.InternalIP, err.Error())
+			failureChan <- node.InternalIP // Report failure to main
+			return
 		}
+
+		config.Logger("INFO", "Latency Results | from_node=%s current_ip=%s to_node=%s target_ip=%s min_latency_ms=%.2f max_latency_ms=%.2f mean_latency_ms=%.2f",
+			currentNode.Name, currentNode.InternalIP, node.Name, node.InternalIP, latency[0], latency[1], latency[2])
+
+		metrics := promMetrics.LatencyMeasurement{FromNodeName: currentNode.Name, FromIpAddress: currentNode.InternalIP, ToNodeName: node.Name, ToIpAddress: node.InternalIP, MinLatency: latency[0], MaxLatency: latency[1], AvgLatency: latency[2]}
+		promMetrics.UpdateMetrics(metrics)
+
+		time.Sleep(10 * time.Second)
 	}
 }
 
