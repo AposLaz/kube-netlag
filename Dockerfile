@@ -1,37 +1,35 @@
 FROM golang:1.24 AS builder
 
-# Install git
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git && \
+    useradd -m -s /bin/bash appuser
 
 # Set working directory
 WORKDIR /app
 
-# Copy go.mod and go.sum for dependency caching
 COPY src/go.mod src/go.sum ./
 
 # Download Go module dependencies
 RUN go mod download
 
-# Copy source code
 COPY ./src ./src
 
-# Change to src directory and build
+USER gouser
 WORKDIR /app/src
 RUN go build -o /app/kube-netlag
 
-# ---- Final Stage ----
 FROM ubuntu:24.10
 
-# Install dependencies for netperf and bind-tools
+# Install dependencies for netperf
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates netperf \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && \
+    useradd -m -s /bin/bash appuser
 
-# Set working directory
 WORKDIR /app
 
-# Copy the built Go binary from the builder stage
 COPY --from=builder /app/kube-netlag .
 
-# Run the Go application
+RUN chown -R gouser:gouser /app
+USER gouser
+
 CMD ["./kube-netlag"]
