@@ -167,10 +167,10 @@ func handleNodeRefresh(envVars config.EnvVars, failureChan chan<- string) {
 	})
 }
 
-// handleNodeFailure restarts the monitoring process for a node that has previously failed.
-// It logs the restart action and retrieves the current list of nodes. If the failed node is
-// still present in the cluster, it initiates the MonitoringLatency function for that node
-// using the provided netperf port and current node information.
+// handleNodeFailure handles the case where a node's monitoring has failed.
+// It logs the event and restarts monitoring for the node with an exponential backoff.
+// It also prevents multiple restarts for the same node by checking if the node is already being restarted.
+// If the node is no longer part of the cluster, it will not be restarted.
 func handleNodeFailure(envVars config.EnvVars, failedIP string, failureChan chan<- string) {
 	config.Logger("INFO", "Restarting monitoring for Node with IP: %s", failedIP)
 
@@ -189,6 +189,12 @@ func handleNodeFailure(envVars config.EnvVars, failedIP string, failureChan chan
 	config.Logger("INFO", "Applying backoff of %v before restarting monitoring for Node: %s", backoffDuration, failedIP)
 	time.Sleep(backoffDuration)
 
+	// Prevent multiple restarts for the same node
+	if _, loaded := activeNodes.Load(failedIP); loaded {
+		config.Logger("WARN", "Node %s monitoring is already being restarted. Skipping duplicate restart.", failedIP)
+		return
+	}
+
 	currentNode, newNodes := GetTargetNodesIP(envVars.CurrentNodeIp)
 
 	currentNodeInfo := CurrentNodeInfo{Name: currentNode, InternalIP: envVars.CurrentNodeIp}
@@ -196,6 +202,7 @@ func handleNodeFailure(envVars config.EnvVars, failedIP string, failureChan chan
 	for _, node := range newNodes {
 		if node.InternalIP == failedIP {
 			go MonitoringLatency(node, envVars.NetperfPort, currentNodeInfo, failureChan)
+			failureCounts.Store(failedIP, 0)
 		}
 	}
 }
