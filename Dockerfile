@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y git && \
 # Set working directory
 WORKDIR /app
 
+RUN chown -R gouser:gouser /app
+
 COPY src/go.mod src/go.sum ./
 
 # Download Go module dependencies
