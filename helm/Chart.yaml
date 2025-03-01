@@ -19,7 +19,7 @@ type: application
 version: 1.0.0
 appVersion: "1.0.0"
 sources:
-  - https://github.com/AposLaz
+  - https://github.com/AposLaz/kube-netlag
 maintainers:
   - name: Apostolos Lazidis
     email: aplazidis@gmail.com
