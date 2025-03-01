@@ -1,0 +1,126 @@
+## Default values for Kube-NetLag
+## This is a YAML-formatted file.
+## Declare variables to be passed into your templates.
+
+image:
+  repository: alazidis/kube-netlag
+  ## Specify a imagePullPolicy
+  ## ref: http://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+  ##
+  pullPolicy: Always
+  ## Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+# imagePullSecrets:
+#  - regcred
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
+
+## Configuration for Prometheus integration.
+## If `create` is set to `true`, a ConfigMap will be created to configure Prometheus to scrape metrics from Kube-NetLag.
+## The namespace where the ConfigMap is created can be overridden using the `namespace` field.
+prometheusConfig:
+  # Set to `true` to generate a Prometheus ConfigMap for metrics scraping.
+  create: true
+  # Specify the namespace where the Prometheus ConfigMap should be deployed. Defaults to the release namespace if empty.
+  namespace: ""
+
+ports:
+  ## The primary port used by the Netperf server for network performance testing.
+  ## This port allows communication between the Netperf client and the server.
+  ## Ensure this port is open if external clients need to access Netperf.
+  ## change this port if you want to use a different port and ensure add NETPERF_PORT to extraEnv
+  - containerPort: 12865
+    hostPort: 12865
+    ## The port used for exposing Prometheus metrics.
+    ## This allows Prometheus to scrape metrics from the application for monitoring.
+    ## change this port if you want to use a different port and ensure add METRICS_PORT to extraEnv
+  - containerPort: 9090
+    hostPort: 9090
+
+## Defines additional environment variables to be injected into the container.
+## ref: https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container
+## - NETPERF_PORT: Specifies the port on which the Netperf server operates. Defaults to 12865 if not set.
+## - METRICS_PORT: Defines the port used by the metrics server for exposing Prometheus metrics. Defaults to 9090 if not set.
+##
+extraEnv: {}
+# Example:
+# - name: NETPERF_PORT
+#   value: "12865"
+# - name: METRICS_PORT
+#   value: "9090"
+
+## Service Account Params
+## ref: https://kubernetes.io/docs/concepts/security/service-accounts/
+## @param serviceAccount.annotations Annotations to add to the service account
+##
+serviceAccount:
+  # Annotations to add to the service account
+  annotations: {}
+
+## @param podAnnotations Annotations for hdeu-hub-repo pod
+## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+##
+podAnnotations: {}
+podLabels: {}
+
+## Pod Security Context Configuration
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+## @param podSecurityContext.fsGroup The group ID associated with mounted volumes, ensuring proper file permissions.
+## @param podSecurityContext.runAsUser Specifies the user ID to run processes inside the pod.
+## @param podSecurityContext.runAsGroup Specifies the primary group ID for the container.
+## @param podSecurityContext.runAsNonRoot Indicates that the container should not run as the root user.
+##
+podSecurityContext:
+  fsGroup: 1000
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+
+## Container Security Context Configuration
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+## @param securityContext.capabilities.drop Drops all Linux capabilities for enhanced security.
+## @param securityContext.readOnlyRootFilesystem Enforces a read-only root filesystem, if set to true.
+## @param securityContext.allowPrivilegeEscalation Prevents processes from gaining additional privileges.
+## @param securityContext.runAsNonRoot Enforces that the container must run as a non-root user.
+##
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+## Resources configuration
+## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+##
+resources:
+  limits:
+    cpu: 400m
+    memory: 80Mi
+  requests:
+    cpu: 200m
+    memory: 40Mi
+
+## Liveness Probe Configuration
+## Configures periodic health checks to determine if the container should be restarted.
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+## - initialDelaySeconds: Specifies the time in seconds before the first probe is executed.
+## - periodSeconds: Defines the interval between consecutive probe checks.
+##
+livenessProbe:
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+## Readiness Probe Configuration
+## Determines when a container is ready to receive traffic. If the probe fails, the container is temporarily removed from service discovery.
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+## - initialDelaySeconds: Specifies the delay before the first readiness check.
+## - periodSeconds: Defines the frequency of the probe execution.
+##
+readinessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 5

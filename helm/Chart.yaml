@@ -1,0 +1,11 @@
+apiVersion: v2
+name: kube-netlag
+description: A Helm chart for Kube-NetLag
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+sources:
+  - https://github.com/AposLaz
+maintainers:
+  - name: Apostolos Lazidis
+    email: aplazidis@gmail.com

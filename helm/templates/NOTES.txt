@@ -1,0 +1,17 @@
+*******************************************************************************
+
+               Welcome to **Kube-NetLag Daemon**
+
+              (¬‿¬)   (¬‿¬)   (¬‿¬)   (¬‿¬)   (¬‿¬)
+
+The DaemonSet has been successfully deployed across your cluster nodes,
+ready to simulate and measure network lag.
+
+**Metrics exposed on**: `/metrics` at port `{{ include "getMetricPort" . }}`  
+**Netperf listening on**: port `{{- (index .Values.ports 0).containerPort -}}`  
+**Namespace**: `{{ .Values.namespaceOverride | default .Release.Namespace }}`
+
+Thank you for using **Kube-NetLag**! ⚡  
+Happy monitoring! ⚡ Stay fast and reliable! ⚡
+
+*******************************************************************************
