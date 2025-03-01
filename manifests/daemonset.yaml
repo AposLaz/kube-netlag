@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: release-name-kube-netlag
+  namespace: kube-netlag
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-netlag
+  template:
+    metadata:
+      annotations:
+      labels:
+        app.kubernetes.io/name: kube-netlag
+    spec:
+      hostNetwork: true
+      serviceAccountName: kube-netlag
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: kube-netlag
+          image: "alazidis/kube-netlag:1.0.0"
+          imagePullPolicy: Always
+          env:
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          ports:
+            - containerPort: 12865
+              hostPort: 12865
+            - containerPort: 9090
+              hostPort: 9090
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 9090
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            limits:
+              cpu: 400m
+              memory: 80Mi
+            requests:
+              cpu: 200m
+              memory: 40Mi

@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-netlag
+  namespace: kube-netlag
+data:
+  kube-netlag.yaml: |-
+    - job_name: "kube-netlag-daemon"
+      kubernetes_sd_configs:
+        - role: pod
+          namespaces:
+            names:
+              - kube-netlag
+      relabel_configs:
+    - source_labels: [__meta_kubernetes_pod_label_app]
+      action: keep
+      regex: kube-netlag
+    - source_labels: [__meta_kubernetes_namespace]
+      action: keep
+      regex: kube-netlag
+    - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+      action: replace
+      regex: (.+)
+      target_label: __metrics_path__
+      replacement: /metrics
+    - source_labels:
+        [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+      action: replace
+      regex: (.+):(?:\d+);(9090)
+      replacement: $1:$2
+      target_label: __address__
+    - source_labels: [__meta_kubernetes_pod_node_name]
+      target_label: node
+    - source_labels: [__meta_kubernetes_namespace]
+      target_label: namespace
+    - source_labels: [__meta_kubernetes_pod_name]
+      target_label: pod
