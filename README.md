@@ -29,6 +29,7 @@
     - [**Latency Metrics**](#latency-metrics)
     - [**Example Prometheus Query**](#example-prometheus-query)
   - [**Contributing**](#contributing)
+  - [**Disclaimer**](#disclaimer)
   - [**License**](#license)
   - [**Author**](#author)
 
@@ -199,9 +200,14 @@ Contributions are welcome! To report issues or request features:
 - Open an issue on GitHub.
 - Submit a pull request with improvements.
 
+# Disclaimer
+
+Kube-NetLag is **not an official Kubernetes project** and is not affiliated with or endorsed by the **Cloud Native Computing Foundation (CNCF)** or Kubernetes.
+
 # License
 
-cd
+Kube-NetLag is licensed under the **Apache 2.0 License**. See the [LICENSE](./LICENSE) file for details.
+
 # Author
 
 - Apostolos Lazidis 🚀

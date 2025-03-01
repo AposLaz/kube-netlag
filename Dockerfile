@@ -8,15 +8,15 @@ WORKDIR /app
 
 RUN chown -R gouser:gouser /app
 
-COPY src/go.mod src/go.sum ./
+COPY pkg/go.mod pkg/go.sum ./
 
 # Download Go module dependencies
 RUN go mod download
 
-COPY ./src ./src
+COPY ./pkg ./pkg
 
 USER gouser
-WORKDIR /app/src
+WORKDIR /app/pkg
 RUN go build -o /app/kube-netlag
 
 FROM ubuntu:24.10
