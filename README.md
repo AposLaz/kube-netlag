@@ -175,9 +175,9 @@ Kube-NetLag provides the following **Prometheus metrics** to monitor network lat
 ### **Latency Metrics**
 | Metric Name               | Description                                           | Labels (`from_node`, `to_node`, `from_ip`, `to_ip`) |
 |---------------------------|------------------------------------------------------|------------------------------------------------------|
-| `node_min_latency_ms`     | Minimum latency in **microseconds** between nodes.  | ✅ |
-| `node_max_latency_ms`     | Maximum latency in **microseconds** between nodes.  | ✅ |
-| `node_avg_latency_ms`     | Average latency in **microseconds** between nodes.  | ✅ |
+| `node_min_latency_ms`     | Minimum latency in **microseconds** between nodes.  | <p align="center"><input type="checkbox" disabled checked /></p> |
+| `node_max_latency_ms`     | Maximum latency in **microseconds** between nodes.  | <p align="center"><input type="checkbox" disabled checked /></p> |
+| `node_avg_latency_ms`     | Average latency in **microseconds** between nodes.  | <p align="center"><input type="checkbox" disabled checked /></p> |
 
 Each metric includes the following labels:
 - **`from_node`** – Name of the source node (The current Node).
@@ -201,8 +201,7 @@ Contributions are welcome! To report issues or request features:
 
 # License
 
-This project is licensed under the MIT License.
-
+cd
 # Author
 
 - Apostolos Lazidis 🚀
