@@ -173,11 +173,11 @@ Prometheus will automatically collect network latency and performance metrics fr
 Kube-NetLag provides the following **Prometheus metrics** to monitor network latency between Kubernetes nodes.
 
 ### **Latency Metrics**
-| Metric Name               | Description                                           | Labels (`from_node`, `to_node`, `from_ip`, `to_ip`) |
-|---------------------------|------------------------------------------------------|------------------------------------------------------|
-| `node_min_latency_ms`     | Minimum latency in **microseconds** between nodes.  | ✅ |
-| `node_max_latency_ms`     | Maximum latency in **microseconds** between nodes.  | ✅ |
-| `node_avg_latency_ms`     | Average latency in **microseconds** between nodes.  | ✅ |
+| Metric Name               | Description                                           |
+|---------------------------|------------------------------------------------------|
+| `node_min_latency_ms`     | Minimum latency in **microseconds** between nodes.  |
+| `node_max_latency_ms`     | Maximum latency in **microseconds** between nodes.  |
+| `node_avg_latency_ms`     | Average latency in **microseconds** between nodes.  |
 
 Each metric includes the following labels:
 - **`from_node`** – Name of the source node (The current Node).
