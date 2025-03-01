@@ -29,6 +29,7 @@
     - [**Latency Metrics**](#latency-metrics)
     - [**Example Prometheus Query**](#example-prometheus-query)
   - [**Contributing**](#contributing)
+  - [**Code of Conduct**](#code-of-conduct)
   - [**Disclaimer**](#disclaimer)
   - [**License**](#license)
   - [**Author**](#author)
@@ -193,21 +194,28 @@ To visualize average latency between nodes in Prometheus:
 node_avg_latency_ms{from_node="node-1", to_node="node-2"}
 ```
 
-# Contributing
+## **Contributing**  
+We welcome contributions from the community! 🚀  
+If you'd like to report an issue, request a feature, or contribute code, please check out our:  
 
-Contributions are welcome! To report issues or request features:
+- 📝 [Contribution Guidelines](./CONTRIBUTING.md)  
+- 💬 [Open an Issue](https://github.com/AposLaz/kube-netlag/issues)  
+- 🔄 [Submit a Pull Request](https://github.com/AposLaz/kube-netlag/pulls)  
 
-- Open an issue on GitHub.
-- Submit a pull request with improvements.
+## **Code of Conduct**  
+We follow the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md).  
+Please be **respectful and inclusive** to all community members.  
 
-# Disclaimer
+## Disclaimer
 
 Kube-NetLag is **not an official Kubernetes project** and is not affiliated with or endorsed by the **Cloud Native Computing Foundation (CNCF)** or Kubernetes.
 
-# License
+## **License**  
+Kube-NetLag is **licensed under the Apache 2.0 License**.  
+By contributing, you agree that your code will also be licensed under **Apache 2.0**.  
 
-Kube-NetLag is licensed under the **Apache 2.0 License**. See the [LICENSE](./LICENSE) file for details.
+🔗 Read the full license here: [LICENSE](./LICENSE)  
 
-# Author
+## Author
 
 - Apostolos Lazidis 🚀
