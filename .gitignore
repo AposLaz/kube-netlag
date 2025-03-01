@@ -1,3 +1,4 @@
 kube-netlag
-helm
 *.exe
+
+istio-helm
