@@ -20,7 +20,6 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: {{ include "..name" . }}-node-reader
-  namespace: {{ .Values.namespaceOverride | default .Release.Namespace }}
 subjects:
   - kind: ServiceAccount
     name: {{ include "..serviceAccountName" . }}
