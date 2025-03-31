@@ -77,7 +77,12 @@ serviceAccount:
 ## @param podAnnotations Annotations for hdeu-hub-repo pod
 ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
 ##
-podAnnotations: {}
+podAnnotations:
+  prometheus.io/path: /metrics
+  # same value as service port
+  prometheus.io/port: "9090"
+  prometheus.io/scrape: "true"
+
 podLabels: {}
 
 ## Pod Security Context Configuration
