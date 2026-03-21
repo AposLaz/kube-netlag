@@ -12,7 +12,7 @@ jobs:
     release:
         runs-on: ubuntu-latest
         permissions:
-            contents: write # needed to create GitHub Releases and push to gh-pages
+            contents: write
 
         steps:
             - name: Checkout
