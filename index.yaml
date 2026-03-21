@@ -2,6 +2,21 @@ apiVersion: v1
 entries:
   kube-netlag:
   - apiVersion: v2
+    appVersion: 1.1.0
+    created: "2026-03-21T10:30:18.634468596Z"
+    description: A Helm chart for Kube-NetLag
+    digest: 2051c63087e1492a406cbdfd28a305c777e432c16eabdf2b49314b660669420c
+    maintainers:
+    - email: aplazidis@gmail.com
+      name: Apostolos Lazidis
+    name: kube-netlag
+    sources:
+    - https://github.com/AposLaz/kube-netlag
+    type: application
+    urls:
+    - https://github.com/AposLaz/kube-netlag/releases/download/kube-netlag-1.1.0/kube-netlag-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
     appVersion: 1.0.0
     created: "2025-03-02T10:34:09.619528273+02:00"
     description: A Helm chart for Kube-NetLag
@@ -16,4 +31,4 @@ entries:
     urls:
     - https://AposLaz.github.io/kube-netlag/kube-netlag-1.0.0.tgz
     version: 1.0.0
-generated: "2025-03-02T10:34:09.618902947+02:00"
+generated: "2026-03-21T10:30:18.634479964Z"
