@@ -19,7 +19,7 @@ metadata:
   name: {{ include "..name" . }}
   namespace: {{ .Values.prometheusConfig.namespace | default .Release.Namespace }}
 data:
-  kube-netlag.yml: |-
+  kube-netlag.yaml: |-
     scrape_configs:
       - job_name: "kube-netlag-daemon"
         kubernetes_sd_configs:

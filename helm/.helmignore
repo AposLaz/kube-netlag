@@ -21,3 +21,5 @@
 .idea/
 *.tmproj
 .vscode/
+# Rendered template output (local dev artifact, not part of the chart)
+test.yaml
