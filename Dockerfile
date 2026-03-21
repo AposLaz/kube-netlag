@@ -19,7 +19,7 @@ USER gouser
 WORKDIR /app/pkg
 RUN go build -o /app/kube-netlag
 
-FROM ubuntu:24.10
+FROM ubuntu:24.04
 
 # Install dependencies for netperf
 RUN apt-get update && apt-get install -y --no-install-recommends \
