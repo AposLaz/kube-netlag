@@ -49,6 +49,7 @@ You can deploy **Kube-NetLag** using either Kubernetes **manifests** or a **Helm
 ## **Tested Kubernetes Distributions**
 Kube-NetLag has been successfully tested on the following Kubernetes distributions:
 - ✅ **Rancher Kubernetes**
+- ✅ **AWS EKS**
 - 🔄 **More distributions to be tested...**
 
 > If you tested it on another Kubernetes distribution, feel free to contribute and share your feedback!
@@ -74,7 +75,7 @@ kubectl apply -f manifests/
 To install Kube-NetLag with default values:
 
 ```sh
-helm repo add alazidis https://your-helm-repo-url
+helm repo add alazidis https://aposlaz.github.io/kube-netlag
 helm install kube-netlag alazidis/kube-netlag
 ```
 
